@@ -1,0 +1,69 @@
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { Player, STAT_CATEGORIES, STAT_VALUES } from "@/types/scout";
+
+export const generateStatsPdf = (
+  players: Player[],
+  homeTeam: string,
+  awayTeam: string,
+  homeScore: number,
+  awayScore: number
+) => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(20);
+  doc.text("Estatísticas do Scout", 105, 15, { align: "center" });
+
+  doc.setFontSize(14);
+  doc.text(`${homeTeam || "Time Casa"} ${homeScore} × ${awayScore} ${awayTeam || "Time Visitante"}`, 105, 25, { align: "center" });
+
+  let yPos = 35;
+
+  players.forEach((player) => {
+    const totalActions: Record<string, number> = {};
+    STAT_CATEGORIES.forEach((cat) => {
+      totalActions[cat] = STAT_VALUES.reduce((sum, val) => sum + player.stats[cat][val], 0);
+    });
+
+    const rows = STAT_VALUES.map((val) => {
+      const row: (string | number)[] = [val];
+      STAT_CATEGORIES.forEach((cat) => {
+        const count = player.stats[cat][val];
+        const total = totalActions[cat];
+        const pct = total > 0 ? ((count / total) * 100).toFixed(1) + "%" : "0%";
+        row.push(`${count} (${pct})`);
+      });
+      return row;
+    });
+
+    // Add totals row
+    const totalsRow: (string | number)[] = ["Total"];
+    STAT_CATEGORIES.forEach((cat) => {
+      totalsRow.push(totalActions[cat]);
+    });
+    rows.push(totalsRow);
+
+    doc.setFontSize(12);
+    doc.text(player.name, 14, yPos);
+    yPos += 2;
+
+    autoTable(doc, {
+      startY: yPos,
+      head: [["", ...STAT_CATEGORIES]],
+      body: rows,
+      theme: "grid",
+      headStyles: { fillColor: [34, 120, 65], textColor: 255, fontStyle: "bold" },
+      styles: { halign: "center", fontSize: 9 },
+      margin: { left: 14, right: 14 },
+    });
+
+    yPos = (doc as any).lastAutoTable.finalY + 10;
+
+    if (yPos > 260) {
+      doc.addPage();
+      yPos = 15;
+    }
+  });
+
+  doc.save(`scout_${homeTeam || "casa"}_vs_${awayTeam || "visitante"}.pdf`);
+};
