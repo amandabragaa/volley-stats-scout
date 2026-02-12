@@ -52,7 +52,7 @@ export const generateStatsPdf = (
       head: [["", ...STAT_CATEGORIES]],
       body: rows,
       theme: "grid",
-      headStyles: { fillColor: [34, 120, 65], textColor: 255, fontStyle: "bold" },
+      headStyles: { fillColor: [249, 122, 31], textColor: 255, fontStyle: "bold" },
       styles: { halign: "center", fontSize: 9 },
       margin: { left: 14, right: 14 },
     });
