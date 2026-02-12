@@ -1,4 +1,4 @@
-export type StatCategory = "P" | "A" | "D" | "L" | "B";
+export type StatCategory = "P" | "A" | "D" | "L" | "B" | "S";
 export type StatValue = "++" | "+" | "-" | "/";
 
 export interface PlayerStats {
@@ -17,7 +17,7 @@ export interface Player {
   expanded: boolean;
 }
 
-export const STAT_CATEGORIES: StatCategory[] = ["P", "A", "D", "L", "B"];
+export const STAT_CATEGORIES: StatCategory[] = ["P", "A", "D", "L", "B", "S"];
 export const STAT_VALUES: StatValue[] = ["++", "+", "-", "/"];
 
 export const createEmptyStats = (): PlayerStats => {
