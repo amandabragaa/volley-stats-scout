@@ -7,6 +7,7 @@ interface PlayerRowProps {
   onToggle: () => void;
   onRemove: () => void;
   onStat: (category: StatCategory, value: StatValue) => void;
+  onNameChange: (name: string) => void;
 }
 
 const statValueColors: Record<StatValue, string> = {
@@ -16,7 +17,7 @@ const statValueColors: Record<StatValue, string> = {
   "/": "bg-secondary text-secondary-foreground",
 };
 
-const PlayerRow = ({ player, onToggle, onRemove, onStat }: PlayerRowProps) => {
+const PlayerRow = ({ player, onToggle, onRemove, onStat, onNameChange }: PlayerRowProps) => {
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden">
       <div
@@ -25,7 +26,12 @@ const PlayerRow = ({ player, onToggle, onRemove, onStat }: PlayerRowProps) => {
       >
         <div className="flex items-center gap-2">
           {player.expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-          <span className="font-semibold text-card-foreground">{player.name}</span>
+          <input
+            className="font-semibold text-card-foreground bg-transparent border-none focus:outline-none focus:border-b focus:border-primary w-full"
+            value={player.name}
+            onChange={(e) => onNameChange(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
         <Button
           variant="ghost"

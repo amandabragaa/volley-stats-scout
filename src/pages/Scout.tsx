@@ -113,21 +113,14 @@ const Scout = () => {
         {/* Players */}
         <div className="space-y-2">
           {players.map((player) => (
-            <div key={player.id} className="space-y-1">
-              {!player.expanded && (
-                <input
-                  className="w-full bg-transparent text-sm font-semibold px-3 py-0 focus:outline-none text-card-foreground sr-only"
-                  value={player.name}
-                  onChange={(e) => handleNameChange(player.id, e.target.value)}
-                />
-              )}
-              <PlayerRow
-                player={player}
-                onToggle={() => handleToggle(player.id)}
-                onRemove={() => handleRemove(player.id)}
-                onStat={(cat, val) => handleStat(player.id, cat, val)}
-              />
-            </div>
+            <PlayerRow
+              key={player.id}
+              player={player}
+              onToggle={() => handleToggle(player.id)}
+              onRemove={() => handleRemove(player.id)}
+              onStat={(cat, val) => handleStat(player.id, cat, val)}
+              onNameChange={(name) => handleNameChange(player.id, name)}
+            />
           ))}
         </div>
 
