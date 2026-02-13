@@ -1,19 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { Button } from "@/components/ui/button";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) navigate("/scout");
-    });
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate("/scout");
-    });
-    return () => subscription.unsubscribe();
-  }, [navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -25,6 +15,13 @@ const Login = () => {
         <div className="flex justify-center">
           <div className="w-24 h-1 bg-primary rounded-full" />
         </div>
+        <Button
+          onClick={() => navigate("/scout")}
+          size="lg"
+          className="text-lg px-8 py-6"
+        >
+          Acessar Scout
+        </Button>
       </div>
     </div>
   );
