@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, RotateCcw, FileText, LogOut } from "lucide-react";
+import { Plus, RotateCcw, FileText, ArrowLeft } from "lucide-react";
 import ScoreBoard from "@/components/ScoreBoard";
 import PlayerRow from "@/components/PlayerRow";
 import { Player, StatCategory, StatValue, createPlayer } from "@/types/scout";
@@ -22,15 +21,6 @@ const Scout = () => {
   const [homeScore, setHomeScore] = useState(0);
   const [awayScore, setAwayScore] = useState(0);
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) navigate("/");
-    });
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) navigate("/");
-    });
-    return () => subscription.unsubscribe();
-  }, [navigate]);
 
   const handleAddPlayer = () => {
     const name = newPlayerName.trim();
@@ -76,8 +66,7 @@ const Scout = () => {
     setAwayTeam("");
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleBack = () => {
     navigate("/");
   };
 
@@ -91,8 +80,8 @@ const Scout = () => {
       <header className="sticky top-0 z-10 bg-primary text-primary-foreground shadow-md">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
           <h1 className="text-2xl tracking-wider">VOLLEY SCOUT</h1>
-          <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={handleLogout}>
-            <LogOut className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={handleBack}>
+            <ArrowLeft className="h-5 w-5" />
           </Button>
         </div>
       </header>
