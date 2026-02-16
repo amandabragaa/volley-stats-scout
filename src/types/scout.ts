@@ -1,14 +1,8 @@
 export type StatCategory = "P" | "A" | "D" | "L" | "B" | "S";
 export type StatValue = "++" | "+" | "-" | "/";
 
-export interface PlayerStats {
-  [category: string]: {
-    "++": number;
-    "+": number;
-    "-": number;
-    "/": number;
-  };
-}
+// Tipagem mais segura (evita string solta)
+export type PlayerStats = Record<StatCategory, Record<StatValue, number>>;
 
 export interface Player {
   id: string;
@@ -20,16 +14,23 @@ export interface Player {
 export const STAT_CATEGORIES: StatCategory[] = ["P", "A", "D", "L", "B", "S"];
 export const STAT_VALUES: StatValue[] = ["++", "+", "-", "/"];
 
+// Gerador de ID compatível com todos dispositivos
+export const generateId = (): string =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+// Criação de stats segura
 export const createEmptyStats = (): PlayerStats => {
-  const stats: PlayerStats = {};
-  for (const cat of STAT_CATEGORIES) {
-    stats[cat] = { "++": 0, "+": 0, "-": 0, "/": 0 };
-  }
-  return stats;
+  return STAT_CATEGORIES.reduce((acc, cat) => {
+    acc[cat] = { "++": 0, "+": 0, "-": 0, "/": 0 };
+    return acc;
+  }, {} as PlayerStats);
 };
 
+// Criação de player
 export const createPlayer = (name: string): Player => ({
-  id: crypto.randomUUID(),
+  id: generateId(),
   name,
   stats: createEmptyStats(),
   expanded: false,

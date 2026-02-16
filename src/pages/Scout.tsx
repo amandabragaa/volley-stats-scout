@@ -50,7 +50,7 @@ const Scout = () => {
                 ...p.stats,
                 [category]: {
                   ...p.stats[category],
-                  [value]: p.stats[category][value] + 1,
+                  [value]: (p.stats[category][value] || 0) + 1,
                 },
               },
             }
