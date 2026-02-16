@@ -13,14 +13,15 @@ const DEFAULT_COUNT = 14;
 const Scout = () => {
   const navigate = useNavigate();
   const [players, setPlayers] = useState<Player[]>(() =>
-    Array.from({ length: DEFAULT_COUNT }, (_, i) => createPlayer(`Jogador ${i + 1}`))
+    Array.from({ length: DEFAULT_COUNT }, (_, i) =>
+      createPlayer(`Jogador ${i + 1}`),
+    ),
   );
   const [newPlayerName, setNewPlayerName] = useState("");
   const [homeTeam, setHomeTeam] = useState("");
   const [awayTeam, setAwayTeam] = useState("");
   const [homeScore, setHomeScore] = useState(0);
   const [awayScore, setAwayScore] = useState(0);
-
 
   const handleAddPlayer = () => {
     const name = newPlayerName.trim();
@@ -31,7 +32,7 @@ const Scout = () => {
 
   const handleToggle = (id: string) => {
     setPlayers((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, expanded: !p.expanded } : p))
+      prev.map((p) => (p.id === id ? { ...p, expanded: !p.expanded } : p)),
     );
   };
 
@@ -53,13 +54,17 @@ const Scout = () => {
                 },
               },
             }
-          : p
-      )
+          : p,
+      ),
     );
   };
 
   const handleReset = () => {
-    setPlayers(Array.from({ length: DEFAULT_COUNT }, (_, i) => createPlayer(`Jogador ${i + 1}`)));
+    setPlayers(
+      Array.from({ length: DEFAULT_COUNT }, (_, i) =>
+        createPlayer(`Jogador ${i + 1}`),
+      ),
+    );
     setHomeScore(0);
     setAwayScore(0);
     setHomeTeam("");
@@ -80,7 +85,12 @@ const Scout = () => {
       <header className="sticky top-0 z-10 bg-primary text-primary-foreground shadow-md">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 py-3">
           <h1 className="text-2xl tracking-wider">VOLLEY SCOUT</h1>
-          <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={handleBack}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-primary-foreground hover:bg-primary-foreground/10"
+            onClick={handleBack}
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </div>
@@ -121,7 +131,10 @@ const Scout = () => {
             placeholder="Nome do jogador"
             onKeyDown={(e) => e.key === "Enter" && handleAddPlayer()}
           />
-          <Button onClick={handleAddPlayer} className="bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 gap-2">
+          <Button
+            onClick={handleAddPlayer}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 gap-2"
+          >
             <Plus className="h-4 w-4" /> Adicionar
           </Button>
         </div>
@@ -129,7 +142,15 @@ const Scout = () => {
         {/* Actions */}
         <div className="flex gap-3">
           <Button
-            onClick={() => generateStatsPdf(players, homeTeam, awayTeam, homeScore, awayScore)}
+            onClick={() =>
+              generateStatsPdf(
+                players,
+                homeTeam,
+                awayTeam,
+                homeScore,
+                awayScore,
+              )
+            }
             className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90 gap-2 text-base py-6"
           >
             <FileText className="h-5 w-5" /> Estatísticas
