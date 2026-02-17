@@ -6,7 +6,7 @@ import { Plus, RotateCcw, FileText, ArrowLeft } from "lucide-react";
 import ScoreBoard from "@/components/ScoreBoard";
 import PlayerRow from "@/components/PlayerRow";
 import { Player, StatCategory, StatValue, createPlayer } from "@/types/scout";
-import { generateStatsPdf } from "@/utils/generatePdf";
+import { generateStatsPdf } from "@/services/generatePdf";
 
 const DEFAULT_COUNT = 14;
 
