@@ -2,7 +2,7 @@
 
 Sistema de Scout para Voleibol — aplicação web para registrar estatísticas de partidas em tempo real.
 
-Construído com Vite, React, TypeScript, Tailwind CSS, shadcn/ui, React Query, React Router e Supabase.
+Construído com Vite, React, TypeScript, Tailwind CSS, shadcn/ui, React Query e React Router. Os dados da partida são persistidos localmente no navegador (`localStorage`).
 
 ## Pré-requisitos
 

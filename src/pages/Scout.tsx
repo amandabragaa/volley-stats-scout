@@ -7,21 +7,51 @@ import ScoreBoard from "@/components/ScoreBoard";
 import PlayerRow from "@/components/PlayerRow";
 import { Player, StatCategory, StatValue, createPlayer } from "@/types/scout";
 import { generateStatsPdf } from "@/services/generatePdf";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 const DEFAULT_COUNT = 14;
+const STORAGE_KEY = "volley-scout:state:v1";
+
+const createDefaultPlayers = () =>
+  Array.from({ length: DEFAULT_COUNT }, (_, i) =>
+    createPlayer(`Jogador ${i + 1}`),
+  );
+
+type ScoutState = {
+  players: Player[];
+  homeTeam: string;
+  awayTeam: string;
+  homeScore: number;
+  awayScore: number;
+};
+
+const defaultState = (): ScoutState => ({
+  players: createDefaultPlayers(),
+  homeTeam: "",
+  awayTeam: "",
+  homeScore: 0,
+  awayScore: 0,
+});
 
 const Scout = () => {
   const navigate = useNavigate();
-  const [players, setPlayers] = useState<Player[]>(() =>
-    Array.from({ length: DEFAULT_COUNT }, (_, i) =>
-      createPlayer(`Jogador ${i + 1}`),
-    ),
-  );
+  const [state, setState] = useLocalStorage<ScoutState>(STORAGE_KEY, defaultState);
+  const { players, homeTeam, awayTeam, homeScore, awayScore } = state;
   const [newPlayerName, setNewPlayerName] = useState("");
-  const [homeTeam, setHomeTeam] = useState("");
-  const [awayTeam, setAwayTeam] = useState("");
-  const [homeScore, setHomeScore] = useState(0);
-  const [awayScore, setAwayScore] = useState(0);
+
+  const resolve = <T,>(action: React.SetStateAction<T>, prev: T): T =>
+    typeof action === "function" ? (action as (p: T) => T)(prev) : action;
+
+  const setPlayers = (action: React.SetStateAction<Player[]>) =>
+    setState((s) => ({ ...s, players: resolve(action, s.players) }));
+  const setHomeTeam = (action: React.SetStateAction<string>) =>
+    setState((s) => ({ ...s, homeTeam: resolve(action, s.homeTeam) }));
+  const setAwayTeam = (action: React.SetStateAction<string>) =>
+    setState((s) => ({ ...s, awayTeam: resolve(action, s.awayTeam) }));
+  const setHomeScore = (action: React.SetStateAction<number>) =>
+    setState((s) => ({ ...s, homeScore: resolve(action, s.homeScore) }));
+  const setAwayScore = (action: React.SetStateAction<number>) =>
+    setState((s) => ({ ...s, awayScore: resolve(action, s.awayScore) }));
 
   const handleAddPlayer = () => {
     const name = newPlayerName.trim();
@@ -59,17 +89,7 @@ const Scout = () => {
     );
   };
 
-  const handleReset = () => {
-    setPlayers(
-      Array.from({ length: DEFAULT_COUNT }, (_, i) =>
-        createPlayer(`Jogador ${i + 1}`),
-      ),
-    );
-    setHomeScore(0);
-    setAwayScore(0);
-    setHomeTeam("");
-    setAwayTeam("");
-  };
+  const handleReset = () => setState(defaultState());
 
   const handleBack = () => {
     navigate("/");
